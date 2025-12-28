@@ -1,0 +1,13 @@
+{
+  "name": "market-time/backend",
+  "description": "Market-Time Backend WordPress",
+  "require-dev": {
+    "php-stubs/wordpress-stubs": "^6.4",
+    "php-stubs/acf-pro-stubs": "^6.2"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

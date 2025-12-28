@@ -1,0 +1,212 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker: Install Market-Time",
+      "type": "shell",
+      "command": "make install",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Initial setup - Create .env, build images, start containers"
+    },
+    {
+      "label": "Docker: Start Containers",
+      "type": "shell",
+      "command": "make start",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Start all Market-Time containers"
+    },
+    {
+      "label": "Docker: Stop Containers",
+      "type": "shell",
+      "command": "make stop",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Stop all Market-Time containers"
+    },
+    {
+      "label": "Docker: Restart Containers",
+      "type": "shell",
+      "command": "make restart",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Restart all containers"
+    },
+    {
+      "label": "Docker: Run WordPress Setup",
+      "type": "shell",
+      "command": "make setup",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Run WP-CLI setup script to create sample products"
+    },
+    {
+      "label": "Docker: View Logs",
+      "type": "shell",
+      "command": "make logs",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "detail": "Show container logs (all services)"
+    },
+    {
+      "label": "Docker: View WordPress Logs",
+      "type": "shell",
+      "command": "make logs-wp",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "detail": "Show WordPress container logs only"
+    },
+    {
+      "label": "Docker: Open WordPress Shell",
+      "type": "shell",
+      "command": "make shell",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Open bash shell in WordPress container"
+    },
+    {
+      "label": "Docker: Open MySQL Shell",
+      "type": "shell",
+      "command": "make db-shell",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Open MySQL command line"
+    },
+    {
+      "label": "Docker: Test API",
+      "type": "shell",
+      "command": "make test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Test all Market-Time API endpoints"
+    },
+    {
+      "label": "Docker: Container Status",
+      "type": "shell",
+      "command": "make status",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Show status of all containers"
+    },
+    {
+      "label": "Docker: Clean (Stop & Remove)",
+      "type": "shell",
+      "command": "make clean",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Stop and remove all containers"
+    },
+    {
+      "label": "Docker: Full Cleanup",
+      "type": "shell",
+      "command": "make clean-all",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "⚠️ Remove containers, volumes, and images (deletes all data)"
+    },
+    {
+      "label": "Open WordPress Admin",
+      "type": "shell",
+      "command": "start http://localhost:8080/wp-admin",
+      "windows": {
+        "command": "start http://localhost:8080/wp-admin"
+      },
+      "linux": {
+        "command": "xdg-open http://localhost:8080/wp-admin"
+      },
+      "osx": {
+        "command": "open http://localhost:8080/wp-admin"
+      },
+      "presentation": {
+        "reveal": "silent"
+      },
+      "problemMatcher": [],
+      "detail": "Open WordPress admin in browser"
+    },
+    {
+      "label": "Open API Products Endpoint",
+      "type": "shell",
+      "command": "start http://localhost:8080/wp-json/market-time/v1/products",
+      "windows": {
+        "command": "start http://localhost:8080/wp-json/market-time/v1/products"
+      },
+      "linux": {
+        "command": "xdg-open http://localhost:8080/wp-json/market-time/v1/products"
+      },
+      "osx": {
+        "command": "open http://localhost:8080/wp-json/market-time/v1/products"
+      },
+      "presentation": {
+        "reveal": "silent"
+      },
+      "problemMatcher": [],
+      "detail": "Open API products endpoint in browser"
+    },
+    {
+      "label": "Open phpMyAdmin",
+      "type": "shell",
+      "command": "start http://localhost:8081",
+      "windows": {
+        "command": "start http://localhost:8081"
+      },
+      "linux": {
+        "command": "xdg-open http://localhost:8081"
+      },
+      "osx": {
+        "command": "open http://localhost:8081"
+      },
+      "presentation": {
+        "reveal": "silent"
+      },
+      "problemMatcher": [],
+      "detail": "Open phpMyAdmin in browser"
+    }
+  ]
+}

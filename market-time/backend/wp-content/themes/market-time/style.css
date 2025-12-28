@@ -1,0 +1,24 @@
+/*
+Theme Name: Market-Time Headless CMS
+Theme URI: https://market-time.ro
+Description: Headless WordPress theme for multi-domain product comparison platform with AI optimization
+Author: Market-Time Team
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: market-time
+Tags: headless, api, products, multisite, ecommerce
+
+This is a headless theme - frontend is handled by Next.js
+*/
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.wp-admin .market-time-notice {
+    padding: 15px;
+    background: #fff;
+    border-left: 4px solid #0073aa;
+    margin: 20px 0;
+}

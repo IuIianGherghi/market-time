@@ -1,0 +1,22 @@
+{
+  "php.validate.enable": true,
+  "php.suggest.basic": false,
+  "intelephense.stubs": [
+    "wordpress",
+    "wordpress-globals",
+    "wp-cli",
+    "genesis",
+    "polylang"
+  ],
+  "intelephense.diagnostics.undefinedFunctions": false,
+  "intelephense.diagnostics.undefinedConstants": false,
+  "intelephense.diagnostics.undefinedClassConstants": false,
+  "files.associations": {
+    "*.php": "php"
+  },
+  "php.validate.run": "onType",
+
+  // VS Code Tasks
+  "task.autoDetect": "on",
+  "task.quickOpen.showAll": true
+}

@@ -1,0 +1,93 @@
+{
+  "categories": {
+    "1": "Laptops",
+    "2": "Phones & Tablets",
+    "3": "Audio & Gaming",
+    "8": "Shoes",
+    "9": "Clothing",
+    "10": "Accessories",
+    "15": "Furniture",
+    "16": "Home Decor",
+    "20": "Gifts & Toys",
+    "25": "Sports Equipment"
+  },
+  "site_mapping": {
+    "1": {
+      "domain": "market-time.ro",
+      "name": "Market-Time Main",
+      "categories": ["all"],
+      "description": "Toate produsele - comparator general de prețuri",
+      "niche": "general",
+      "target_audience": "Consumatori care caută cel mai bun preț",
+      "tone": "Profesional, obiectiv",
+      "focus_keywords": ["preț", "comparare", "oferte", "reduceri", "cele mai bune prețuri"],
+      "usps": ["Comparare instant", "Prețuri actualizate zilnic", "50+ magazine"]
+    },
+    "2": {
+      "domain": "electronica.ro",
+      "name": "Electronica & IT",
+      "categories": [1, 2, 3],
+      "description": "Laptops, Phones, Tablets, Audio, Gaming",
+      "niche": "tech",
+      "target_audience": "Entuziaști tech, profesioniști IT, gameri",
+      "tone": "Tehnic, detaliat, orientat spre performanță",
+      "focus_keywords": ["specs", "performanță", "tehnologie", "inovație", "caracteristici"],
+      "usps": ["Specificații detaliate", "Comparare benchmark", "Review-uri tehnice"]
+    },
+    "3": {
+      "domain": "fashion.ro",
+      "name": "Fashion & Style",
+      "categories": [8, 9, 10],
+      "description": "Shoes, Clothing, Accessories",
+      "niche": "fashion",
+      "target_audience": "Fashion-conscious, urmăritori de tendințe",
+      "tone": "Trendy, inspirațional, stylish",
+      "focus_keywords": ["stil", "tendințe", "modă", "colecție", "design", "materiale"],
+      "usps": ["Ultimele tendințe", "Ghiduri de stil", "Brand-uri premium"]
+    },
+    "4": {
+      "domain": "incaltaminte.ro",
+      "name": "Încălțăminte Specializată",
+      "categories": [8],
+      "description": "Pantofi, Adidași, Sandale, Bocanci",
+      "niche": "footwear",
+      "target_audience": "Cumpărători care prioritizează confortul și calitatea",
+      "tone": "Practic, focus pe comfort și durabilitate",
+      "focus_keywords": ["confort", "durabilitate", "calitate", "potrivire", "design"],
+      "usps": ["Ghid măsuri", "Review confort", "Materiale premium"]
+    },
+    "5": {
+      "domain": "casa-living.ro",
+      "name": "Casă & Grădină",
+      "categories": [15, 16],
+      "description": "Mobilier, Decor, Bucătărie, Grădină",
+      "niche": "home",
+      "target_audience": "Proprietari de case, entuziaști design interior",
+      "tone": "Inspirațional, focus pe amenajare și funcționalitate",
+      "focus_keywords": ["amenajare", "design interior", "funcționalitate", "estetică", "spațiu"],
+      "usps": ["Idei amenajare", "Ghiduri DIY", "Măsurători exacte"]
+    },
+    "6": {
+      "domain": "cadouri.ro",
+      "name": "Cadouri & Surprize",
+      "categories": [20],
+      "description": "Cadouri pentru orice ocazie și vârstă",
+      "niche": "gifts",
+      "target_audience": "Cumpărători care caută cadouri speciale",
+      "tone": "Emoțional, warm, orientat spre experiență",
+      "focus_keywords": ["cadou perfect", "surpriză", "ocazie specială", "unic", "memorabil"],
+      "usps": ["Sugestii cadouri", "Filtrare după ocazie", "Gift wrapping info"]
+    },
+    "7": {
+      "domain": "sport-fitness.ro",
+      "name": "Sport & Fitness",
+      "categories": [25],
+      "description": "Echipamente sportive, fitness, outdoor",
+      "niche": "sports",
+      "target_audience": "Sportivi, fitness enthusiasts, aventurieri",
+      "tone": "Energic, motivațional, orientat spre performanță",
+      "focus_keywords": ["performanță", "rezistență", "rezultate", "antrenament", "calitate"],
+      "usps": ["Specificații tehnice", "Ghiduri antrenament", "Durabilitate"]
+    }
+  }
+}

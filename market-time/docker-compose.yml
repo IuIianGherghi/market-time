@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  # Database - MySQL 8.0
+  db:
+    image: mysql:8.0
+    container_name: market-time-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-market_time}
+      MYSQL_USER: ${DB_USER:-market_time_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-market_time_pass}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./scripts/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - market-time-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # WordPress with custom configuration
+  wordpress:
+    build:
+      context: ./docker/wordpress
+      dockerfile: Dockerfile
+    container_name: market-time-wordpress
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-market_time}
+      WORDPRESS_DB_USER: ${DB_USER:-market_time_user}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-market_time_pass}
+      WORDPRESS_TABLE_PREFIX: wp_
+      WORDPRESS_DEBUG: ${WP_DEBUG:-1}
+      # Market-Time specific
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-meta-llama/llama-3.1-70b-instruct}
+      BUNNYCDN_URL: ${BUNNYCDN_URL:-}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
+    volumes:
+      # WordPress core
+      - wordpress_data:/var/www/html
+      # Mount custom theme and plugins
+      - ./backend/wp-content/themes/market-time:/var/www/html/wp-content/themes/market-time
+      - ./backend/wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
+      # Mount wp-config additions
+      - ./docker/wordpress/wp-config-additions.php:/var/www/html/wp-config-additions.php
+    ports:
+      - "8080:80"
+    networks:
+      - market-time-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # phpMyAdmin for database management
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: market-time-phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8081:80"
+    networks:
+      - market-time-network
+
+  # WP-CLI for automation
+  wpcli:
+    image: wordpress:cli
+    container_name: market-time-wpcli
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-market_time}
+      WORDPRESS_DB_USER: ${DB_USER:-market_time_user}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-market_time_pass}
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./backend/wp-content/themes/market-time:/var/www/html/wp-content/themes/market-time
+      - ./backend/wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./docker/scripts:/scripts
+    networks:
+      - market-time-network
+    user: "33:33"  # www-data user
+    command: tail -f /dev/null  # Keep container running
+
+volumes:
+  db_data:
+    driver: local
+  wordpress_data:
+    driver: local
+
+networks:
+  market-time-network:
+    driver: bridge

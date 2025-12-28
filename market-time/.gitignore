@@ -1,0 +1,77 @@
+# Market-Time.ro - Git Ignore
+
+# Dependencies
+node_modules/
+vendor/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.DS_Store
+frontend/*.log
+
+# WordPress
+backend/wp-content/uploads/
+backend/wp-content/cache/
+backend/wp-content/upgrade/
+backend/wp-content/backup-db/
+backend/wp-content/advanced-cache.php
+backend/wp-content/wp-cache-config.php
+backend/wp-content/plugins/hello.php
+backend/wp-content/plugins/akismet/
+backend/wp-config.php
+
+# Local by Flywheel
+local-logs/
+local-site.json
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE (keep VS Code settings for Docker tasks)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build artifacts
+dist/
+build/
+
+# PHP
+composer.phar
+composer.lock
+
+# CDN
+.bunnycdn/
+.cloudinary/
+
+# Docker
+docker/volumes/
