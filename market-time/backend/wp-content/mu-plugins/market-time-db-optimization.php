@@ -89,6 +89,12 @@ function market_time_sync_product_to_optimized_table($post_id) {
         return;
     }
 
+    // Check if ACF is available
+    if (!function_exists('get_field')) {
+        error_log('Market-Time DB Sync: ACF plugin not available');
+        return;
+    }
+
     // Get ACF fields
     $sku = get_field('product_sku', $post_id);
     $price = get_field('product_price', $post_id);

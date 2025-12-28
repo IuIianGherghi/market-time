@@ -133,6 +133,11 @@ function market_time_process_external_image($post_id) {
         return;
     }
 
+    // Check if ACF is available
+    if (!function_exists('get_field')) {
+        return;
+    }
+
     $external_image_url = get_field('external_image_url', $post_id);
 
     if (empty($external_image_url)) {
