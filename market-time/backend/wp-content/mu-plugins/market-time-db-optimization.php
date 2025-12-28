@@ -111,6 +111,43 @@ function market_time_sync_product_to_optimized_table($post_id) {
     $category_ids = get_field('category_ids', $post_id);
     $ai_descriptions = get_field('ai_descriptions', $post_id);
 
+    // FIX: Handle inverted prices from 2Performant feed
+    if (!empty($price) && !empty($price_regular)) {
+        // Convert to float for comparison
+        $price_float = floatval($price);
+        $price_regular_float = floatval($price_regular);
+
+        // If current price > regular price, they're inverted (feed error)
+        if ($price_float > $price_regular_float && $price_regular_float > 0) {
+            // Swap them
+            $temp = $price;
+            $price = $price_regular;
+            $price_regular = $temp;
+
+            // Update ACF fields with corrected values
+            if (function_exists('update_field')) {
+                update_field('product_price', $price, $post_id);
+                update_field('price_regular', $price_regular, $post_id);
+            }
+
+            error_log("Market-Time: Fixed inverted prices for product $post_id (was: price=$temp, regular=$price_regular_float)");
+        }
+    }
+
+    // Clean up price_regular if invalid
+    if (!empty($price_regular)) {
+        $price_regular_float = floatval($price_regular);
+        $price_float = floatval($price);
+
+        // If old price is 0 or same as current, remove it
+        if ($price_regular_float == 0 || $price_regular_float == $price_float) {
+            $price_regular = null;
+            if (function_exists('update_field')) {
+                update_field('price_regular', null, $post_id);
+            }
+        }
+    }
+
     // Validate required fields
     if (empty($price) || $price <= 0) {
         error_log("Market-Time: Invalid price for product ID {$post_id}");
