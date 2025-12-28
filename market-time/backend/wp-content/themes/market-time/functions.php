@@ -54,6 +54,24 @@ function market_time_register_product_cpt() {
     );
 
     register_post_type('products', $args);
+
+    // Add capabilities to administrator role
+    $admin_role = get_role('administrator');
+    if ($admin_role) {
+        $admin_role->add_cap('edit_product');
+        $admin_role->add_cap('read_product');
+        $admin_role->add_cap('delete_product');
+        $admin_role->add_cap('edit_products');
+        $admin_role->add_cap('edit_others_products');
+        $admin_role->add_cap('publish_products');
+        $admin_role->add_cap('read_private_products');
+        $admin_role->add_cap('delete_products');
+        $admin_role->add_cap('delete_private_products');
+        $admin_role->add_cap('delete_published_products');
+        $admin_role->add_cap('delete_others_products');
+        $admin_role->add_cap('edit_private_products');
+        $admin_role->add_cap('edit_published_products');
+    }
 }
 add_action('init', 'market_time_register_product_cpt');
 
