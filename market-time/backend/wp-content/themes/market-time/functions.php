@@ -394,6 +394,9 @@ function market_time_auto_update_timestamp($post_id) {
         return;
     }
 
-    update_field('last_updated', current_time('Y-m-d H:i:s'), $post_id);
+    // Check if ACF function exists
+    if (function_exists('update_field')) {
+        update_field('last_updated', current_time('Y-m-d H:i:s'), $post_id);
+    }
 }
 add_action('save_post_products', 'market_time_auto_update_timestamp', 20);
