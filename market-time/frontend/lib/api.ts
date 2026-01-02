@@ -259,3 +259,16 @@ export async function getLatestProducts(limit: number = 10): Promise<ProductsRes
     per_page: limit,
   });
 }
+
+/**
+ * Get all available filter options (categories, brands, merchants)
+ */
+export async function getFilterOptions(): Promise<{
+  categories: Array<{id: number; slug: string; name: string; count: number}>;
+  brands: Array<{id: number; slug: string; name: string; count: number}>;
+  merchants: Array<{id: number; slug: string; name: string; count: number}>;
+}> {
+  return apiFetch(`${API_URL}/filters`, {
+    next: { revalidate: 1800 }, // Cache for 30 minutes
+  });
+}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { getProducts } from "@/lib/api";
+import { getProducts, getFilterOptions } from "@/lib/api";
 import type { Product } from "@/types/product";
 import { getSearchTermFromBrowser, storeSearchTerm, getStoredSearchTerm, productMatchesSearchTerm } from "@/lib/search-detection";
 import { getAllProductsMetadata, generateProductListSchema, generateBreadcrumbSchema } from "@/lib/seo";
@@ -63,6 +63,24 @@ function AllProductsContent() {
       updateMetaTag('og:type', 'website');
     }
   }, [products, totalCount]);
+
+  // Load all available filter options on mount
+  useEffect(() => {
+    const loadFilters = async () => {
+      try {
+        const filters = await getFilterOptions();
+        setAvailableCategories(filters.categories.map(c => c.slug).sort());
+        setAvailableBrands(filters.brands.map(b => b.name).sort());
+        setAvailableMerchants(
+          filters.merchants.map(m => ({ id: m.id, name: m.name }))
+            .sort((a, b) => a.name.localeCompare(b.name))
+        );
+      } catch (error) {
+        console.error('Error loading filters:', error);
+      }
+    };
+    loadFilters();
+  }, []);
 
   // Detect search term from Google/Bing on initial load
   useEffect(() => {
@@ -136,25 +154,6 @@ function AllProductsContent() {
       setProducts(productsData);
       setTotalCount(response.pagination.total_count);
       setTotalPages(response.pagination.total_pages);
-
-      // Extract unique categories, brands and merchants
-      const categories = new Set<string>();
-      const brands = new Set<string>();
-      const merchants = new Map<number, string>();
-
-      response.data.forEach(product => {
-        product.category_ids.forEach(cat => categories.add(cat));
-        if (product.brand) brands.add(product.brand);
-        merchants.set(product.merchant.id, product.merchant.name);
-      });
-
-      setAvailableCategories(Array.from(categories).sort());
-      setAvailableBrands(Array.from(brands).sort());
-      setAvailableMerchants(
-        Array.from(merchants.entries())
-          .map(([id, name]) => ({ id, name }))
-          .sort((a, b) => a.name.localeCompare(b.name))
-      );
     } catch (error) {
       console.error('Error loading products:', error);
       setProducts([]);
