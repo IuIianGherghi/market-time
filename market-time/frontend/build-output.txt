@@ -1,0 +1,23 @@
+
+> frontend@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+uncaughtException Error: write EPIPE
+    at target._send (node:internal/child_process:872:20)
+    at target.send (node:internal/child_process:745:19)
+    at ChildProcessWorker.initialize (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\compiled\jest-worker\index.js:1:11409)
+    at new ChildProcessWorker (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\compiled\jest-worker\index.js:1:10741)
+    at WorkerPool.createWorker (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\compiled\jest-worker\index.js:1:6314)
+    at new BaseWorkerPool (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\compiled\jest-worker\index.js:1:8173)
+    at new WorkerPool (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\compiled\jest-worker\index.js:1:6110)
+    at new Worker (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\compiled\jest-worker\index.js:1:23092)
+    at createWorker (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\lib\worker.js:34:28)
+    at new Worker (D:\Claude Code Test\market-time\frontend\node_modules\next\dist\lib\worker.js:74:9) {
+  errno: -4047,
+  code: 'EPIPE',
+  syscall: 'write'
+}
