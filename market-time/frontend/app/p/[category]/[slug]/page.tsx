@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getProduct } from "@/lib/api";
+import { getProductBySlug } from "@/lib/api";
 import type { Product } from "@/types/product";
 import { getProductMetadata, generateProductSchema, generateBreadcrumbSchema, generateJsonLd } from "@/lib/seo";
 
@@ -32,14 +32,17 @@ export default function ProductPage({ params }: ProductPageProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    const productId = parseInt(params.slug, 10);
-    if (isNaN(productId)) {
+    if (!params.slug) {
       notFound();
+      return;
     }
 
-    getProduct(productId)
+    getProductBySlug(params.slug)
       .then(setProduct)
-      .catch(() => notFound());
+      .catch((error) => {
+        console.error('Error loading product:', error);
+        notFound();
+      });
   }, [params.slug]);
 
   useEffect(() => {

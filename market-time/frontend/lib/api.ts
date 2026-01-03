@@ -103,6 +103,21 @@ export async function getProduct(id: number): Promise<Product> {
 }
 
 /**
+ * Get single product by slug
+ */
+export async function getProductBySlug(slug: string): Promise<Product> {
+  const response = await apiFetch<ProductsResponse>(`${API_URL}/products?slug=${slug}&per_page=1`, {
+    next: { revalidate: 3600 },
+  });
+
+  if (!response.data || response.data.length === 0) {
+    throw new Error(`Product with slug "${slug}" not found`);
+  }
+
+  return response.data[0];
+}
+
+/**
  * Get all categories
  */
 export async function getCategories(): Promise<CategoriesResponse> {
