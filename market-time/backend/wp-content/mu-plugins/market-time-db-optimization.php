@@ -295,9 +295,27 @@ function market_time_sync_product_to_optimized_table($post_id) {
 add_action('acf/save_post', 'market_time_sync_product_to_optimized_table_acf', 20);
 
 /**
+ * Hook for WP All Import - this is triggered after import saves a post
+ */
+add_action('pmxi_saved_post', 'market_time_sync_product_to_optimized_table_wpai', 10, 1);
+
+/**
  * Wrapper function specifically for ACF hook
  */
 function market_time_sync_product_to_optimized_table_acf($post_id) {
+    // Only for products post type
+    if (get_post_type($post_id) !== 'products') {
+        return;
+    }
+
+    // Call the main sync function
+    market_time_sync_product_to_optimized_table($post_id);
+}
+
+/**
+ * Wrapper function specifically for WP All Import hook
+ */
+function market_time_sync_product_to_optimized_table_wpai($post_id) {
     // Only for products post type
     if (get_post_type($post_id) !== 'products') {
         return;

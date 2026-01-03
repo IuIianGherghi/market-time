@@ -42,7 +42,10 @@ function market_time_register_product_cpt() {
         'show_in_rest'          => true, // Enable REST API
         'rest_base'             => 'products',
         'query_var'             => true,
-        'rewrite'               => array('slug' => 'products'),
+        'rewrite'               => array(
+            'slug' => 'p/%product_category%',
+            'with_front' => false
+        ),
         'capability_type'       => 'product',
         'map_meta_cap'          => true,
         'has_archive'           => true,
@@ -101,7 +104,52 @@ function market_time_register_product_taxonomy() {
         'show_in_rest'      => true,
         'show_admin_column' => true,
         'query_var'         => true,
-        'rewrite'           => array('slug' => 'category'),
+        'rewrite'           => array('slug' => 'c'),
+    ));
+
+    /**
+     * Add SEO fields to product_category taxonomy REST API response
+     */
+    register_rest_field('product_category', 'seo', array(
+        'get_callback' => function($term) {
+            return get_category_seo_data($term['id']);
+        },
+        'schema' => array(
+            'description' => 'SEO metadata for category',
+            'type' => 'object',
+        ),
+    ));
+
+    /**
+     * Add SEO fields to product_brand taxonomy REST API response
+     */
+    register_rest_field('product_brand', 'seo', array(
+        'get_callback' => function($term) {
+            if (function_exists('get_brand_seo_data')) {
+                return get_brand_seo_data($term['id']);
+            }
+            return null;
+        },
+        'schema' => array(
+            'description' => 'SEO metadata for brand',
+            'type' => 'object',
+        ),
+    ));
+
+    /**
+     * Add SEO fields to merchant taxonomy REST API response
+     */
+    register_rest_field('merchant', 'seo', array(
+        'get_callback' => function($term) {
+            if (function_exists('get_merchant_seo_data')) {
+                return get_merchant_seo_data($term['id']);
+            }
+            return null;
+        },
+        'schema' => array(
+            'description' => 'SEO metadata for merchant',
+            'type' => 'object',
+        ),
     ));
 
     // Product Brands (non-hierarchical)
@@ -418,3 +466,44 @@ function market_time_auto_update_timestamp($post_id) {
     }
 }
 add_action('save_post_products', 'market_time_auto_update_timestamp', 20);
+
+/**
+ * Replace %product_category% in product permalinks with actual category slug
+ */
+function market_time_product_permalink($permalink, $post, $leavename) {
+    if ($post->post_type !== 'products' || 'publish' !== $post->post_status) {
+        return $permalink;
+    }
+
+    // Get the first product category
+    $terms = get_the_terms($post->ID, 'product_category');
+
+    if (!empty($terms) && !is_wp_error($terms)) {
+        $category_slug = $terms[0]->slug;
+    } else {
+        $category_slug = 'uncategorized';
+    }
+
+    $permalink = str_replace('%product_category%', $category_slug, $permalink);
+
+    return $permalink;
+}
+add_filter('post_type_link', 'market_time_product_permalink', 10, 3);
+
+// Removed custom rewrite rule - using built-in WordPress taxonomy rewrite
+
+/**
+ * Enqueue Category Description Global Styles
+ *
+ * This CSS file contains all styling for category description HTML
+ * You only need to write HTML with the appropriate classes - CSS is global
+ */
+function market_time_enqueue_category_styles() {
+    wp_enqueue_style(
+        'market-time-category-descriptions',
+        get_template_directory_uri() . '/assets/css/category-descriptions.css',
+        array(),
+        '1.0.0'
+    );
+}
+add_action('wp_enqueue_scripts', 'market_time_enqueue_category_styles');

@@ -56,9 +56,7 @@ export interface Category {
   seo?: CategorySEO;
 }
 
-export interface CategoriesResponse {
-  data: Category[];
-}
+export type CategoriesResponse = Category[];
 
 export interface BrandSEO {
   seo_title: string;
@@ -77,9 +75,7 @@ export interface Brand {
   seo?: BrandSEO;
 }
 
-export interface BrandsResponse {
-  data: Brand[];
-}
+export type BrandsResponse = Brand[];
 
 export interface MerchantSEO {
   merchant_id: number;
@@ -94,13 +90,12 @@ export interface Merchant {
   id: number;
   name: string;
   slug: string;
+  count: number;
   description?: string;
   seo?: MerchantSEO;
 }
 
-export interface MerchantsResponse {
-  data: Merchant[];
-}
+export type MerchantsResponse = Merchant[];
 
 // API Query Parameters
 export interface ProductsQueryParams {
