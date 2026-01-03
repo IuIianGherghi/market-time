@@ -223,3 +223,92 @@ function market_time_sanitize_sku($sku) {
     // Limitează la 50 caractere
     return substr($sku, 0, 50);
 }
+
+/**
+ * Auto-create merchant taxonomy term from merchant name and ID
+ * Folosit la import pentru a crea automat merchant-ul în taxonomy
+ *
+ * @param string $merchant_name - Numele merchant-ului (ex: "DyFashion.ro")
+ * @param int $merchant_id - ID-ul merchant-ului din feed (ex: 2405)
+ * @return int|WP_Error - Term ID sau WP_Error
+ */
+function market_time_auto_create_merchant($merchant_name, $merchant_id) {
+    if (empty($merchant_name) || empty($merchant_id)) {
+        error_log("Market-Time: Cannot create merchant - missing name or ID");
+        return null;
+    }
+
+    // Verifică dacă term-ul există deja după merchant_id
+    $existing_terms = get_terms(array(
+        'taxonomy' => 'merchant',
+        'hide_empty' => false,
+        'meta_query' => array(
+            array(
+                'key' => 'merchant_id',
+                'value' => $merchant_id,
+                'compare' => '='
+            )
+        )
+    ));
+
+    if (!empty($existing_terms) && !is_wp_error($existing_terms)) {
+        error_log("Market-Time: Merchant already exists - ID: $merchant_id, Name: $merchant_name");
+        return $existing_terms[0]->term_id;
+    }
+
+    // Generează slug din numele merchant-ului
+    $slug = sanitize_title($merchant_name);
+
+    // Creează term-ul merchant
+    $term = wp_insert_term(
+        $merchant_name, // Numele afișat
+        'merchant',     // Taxonomy
+        array(
+            'slug' => $slug,
+        )
+    );
+
+    if (is_wp_error($term)) {
+        error_log("Market-Time: Error creating merchant term - " . $term->get_error_message());
+        return $term;
+    }
+
+    $term_id = $term['term_id'];
+
+    // Salvează merchant_id ca meta pentru term
+    update_term_meta($term_id, 'merchant_id', $merchant_id);
+
+    error_log("Market-Time: Created new merchant - ID: $merchant_id, Name: $merchant_name, Term ID: $term_id");
+
+    return $term_id;
+}
+
+/**
+ * Hook: Creare automată merchant la salvarea produsului (WP All Import)
+ * Se execută înainte de salvarea produsului
+ */
+add_action('pmxi_saved_post', 'market_time_sync_merchant_on_import', 10, 1);
+
+function market_time_sync_merchant_on_import($post_id) {
+    // Verifică dacă e post type 'products'
+    if (get_post_type($post_id) !== 'products') {
+        return;
+    }
+
+    // Preia merchant_name și merchant_id din ACF fields
+    $merchant_name = get_field('merchant_name', $post_id);
+    $merchant_id = get_field('merchant_id', $post_id);
+
+    if (empty($merchant_name) || empty($merchant_id)) {
+        return;
+    }
+
+    // Creează sau găsește merchant-ul
+    $term_id = market_time_auto_create_merchant($merchant_name, $merchant_id);
+
+    if ($term_id && !is_wp_error($term_id)) {
+        // Atașează merchant taxonomy la produs
+        wp_set_object_terms($post_id, $term_id, 'merchant', false);
+        error_log("Market-Time: Attached merchant (Term ID: $term_id) to product ID: $post_id");
+    }
+}
