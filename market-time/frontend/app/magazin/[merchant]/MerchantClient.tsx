@@ -413,7 +413,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden">
       {/* Product Image - Clickable */}
-      <Link href={`/p/${product.category_ids[0]}/${product.id}`}>
+      <Link href={`/p/${product.category_ids[0]}/${product.slug}`}>
         <div className="relative h-64 bg-gray-100 cursor-pointer group">
           <Image
             src={product.image_url}
@@ -432,7 +432,7 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Product Info */}
       <div className="p-4">
-        <Link href={`/p/${product.category_ids[0]}/${product.id}`}>
+        <Link href={`/p/${product.category_ids[0]}/${product.slug}`}>
           <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 h-10 hover:text-blue-600 cursor-pointer">
             {product.title}
           </h3>
@@ -473,7 +473,7 @@ function ProductCard({ product }: { product: Product }) {
 
           {/* View Details Button - Internal Link */}
           <Link
-            href={`/p/${product.category_ids[0]}/${product.id}`}
+            href={`/p/${product.category_ids[0]}/${product.slug}`}
             className="w-full block bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-md transition-colors text-center"
           >
             Vezi Detalii
