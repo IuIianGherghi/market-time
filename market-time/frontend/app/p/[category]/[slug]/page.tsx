@@ -8,6 +8,7 @@ import { getProductBySlug } from "@/lib/api";
 import type { Product } from "@/types/product";
 import { getProductMetadata, generateProductSchema, generateBreadcrumbSchema, generateJsonLd } from "@/lib/seo";
 import { trackProductView, trackAffiliateClick, enhanceAffiliateLink } from "@/lib/tracking";
+import RecommendedProducts from "@/app/components/RecommendedProducts";
 
 interface ProductPageProps {
   params: {
@@ -285,6 +286,14 @@ export default function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
       </main>
+
+      {/* Recommended Products Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <RecommendedProducts
+          currentProductId={product.id}
+          categorySlug={params.category}
+        />
+      </div>
 
       {/* Sticky CTA Button - Normal size initially, shrinks 20% on scroll */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-lg transition-all duration-300">

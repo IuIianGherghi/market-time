@@ -287,3 +287,32 @@ export async function getFilterOptions(): Promise<{
     next: { revalidate: 1800 }, // Cache for 30 minutes
   });
 }
+
+/**
+ * Get recommended products based on current product
+ * Returns products from same category or with similar name
+ */
+export async function getRecommendedProducts(
+  productId: number,
+  categorySlug: string,
+  limit: number = 6
+): Promise<ProductsResponse> {
+  // Get products from same category (excluding current product)
+  const response = await getProductsByCategory(categorySlug, {
+    per_page: limit + 1, // Get one extra to account for filtering out current product
+    orderby: 'date',
+    order: 'desc',
+  });
+
+  // Filter out the current product
+  const filteredProducts = response.data.filter(p => p.id !== productId);
+
+  return {
+    ...response,
+    data: filteredProducts.slice(0, limit),
+    pagination: {
+      ...response.pagination,
+      total_count: filteredProducts.length,
+    },
+  };
+}
