@@ -496,8 +496,21 @@ function market_time_format_product($product) {
         $gallery = array_filter(array_map('trim', explode("\n", $product['gallery_images'])));
     }
 
+    // Convert category names to slugs
+    $category_names = array_filter(explode(',', $product['category_ids']));
+    $category_slugs = array();
+    foreach ($category_names as $cat_name) {
+        $cat_name = trim($cat_name);
+        // Convert to slug: lowercase, replace spaces and special chars with hyphens
+        $slug = sanitize_title($cat_name);
+        if (!empty($slug)) {
+            $category_slugs[] = $slug;
+        }
+    }
+
     $formatted = array(
         'id' => intval($product['post_id']),
+        'slug' => $product['slug'],
         'sku' => $product['sku'],
         'title' => $product['title'],
         'price' => round(floatval($product['price']), 2),
@@ -515,7 +528,7 @@ function market_time_format_product($product) {
         'product_url' => $product['product_url'],
         'affiliate_code' => $product['affiliate_code'],
         'short_description' => $product['short_description'],
-        'category_ids' => array_filter(explode(',', $product['category_ids'])),
+        'category_ids' => $category_slugs, // Now returns slugs instead of names
         'last_updated' => $product['last_updated'],
     );
 
