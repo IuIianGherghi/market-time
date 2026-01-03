@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getProductBySlug } from "@/lib/api";
 import type { Product } from "@/types/product";
 import { getProductMetadata, generateProductSchema, generateBreadcrumbSchema, generateJsonLd } from "@/lib/seo";
+import { trackProductView, trackAffiliateClick, enhanceAffiliateLink } from "@/lib/tracking";
 
 interface ProductPageProps {
   params: {
@@ -84,6 +85,9 @@ export default function ProductPage({ params }: ProductPageProps) {
       updateMetaTag('og:image', product.image_url);
       updateMetaTag('og:url', metadata.canonical || '');
       updateMetaTag('og:type', 'product');
+
+      // Track product view
+      trackProductView(product, params.category);
     }
   }, [product, params.category]);
 
@@ -98,7 +102,14 @@ export default function ProductPage({ params }: ProductPageProps) {
     );
   }
 
-  const affiliateLink = `${product.affiliate_code}${encodeURIComponent(product.product_url)}`;
+  // Build affiliate link with tracking parameters
+  const baseAffiliateLink = `${product.affiliate_code}${encodeURIComponent(product.product_url)}`;
+  const affiliateLink = enhanceAffiliateLink(baseAffiliateLink);
+
+  // Handle affiliate link click
+  const handleAffiliateClick = () => {
+    trackAffiliateClick(product, params.category);
+  };
 
   // Generate structured data
   const productSchema = generateProductSchema(product, params.category);
@@ -284,6 +295,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             href={affiliateLink}
             target="_blank"
             rel="nofollow noopener"
+            onClick={handleAffiliateClick}
             className={`block bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-all duration-300 text-center ${
               isScrolled ? 'text-base py-3 px-6 max-w-md mx-auto' : 'text-xl py-4 px-8'
             }`}
