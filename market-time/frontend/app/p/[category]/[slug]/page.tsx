@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getProductBySlug } from "@/lib/api";
 import type { Product } from "@/types/product";
 import { getProductMetadata, generateProductSchema, generateBreadcrumbSchema, generateJsonLd } from "@/lib/seo";
 import { trackProductView, trackAffiliateClick, enhanceAffiliateLink } from "@/lib/tracking";
@@ -34,13 +33,28 @@ export default function ProductPage({ params }: ProductPageProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!params.slug) {
+    if (!params.slug) return;
+
+    // Extract product ID from slug (format: "title-slug-123" -> extract 123)
+    const slugParts = params.slug.split('-');
+    const productId = parseInt(slugParts[slugParts.length - 1]);
+
+    if (isNaN(productId)) {
       notFound();
       return;
     }
 
-    getProductBySlug(params.slug)
-      .then(setProduct)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.market-time.ro/wp-json/market-time/v1'}/products?id=${productId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Product not found');
+        return res.json();
+      })
+      .then(response => {
+        if (!response.data || response.data.length === 0) {
+          throw new Error('Product not found');
+        }
+        setProduct(response.data[0]);
+      })
       .catch((error) => {
         console.error('Error loading product:', error);
         notFound();

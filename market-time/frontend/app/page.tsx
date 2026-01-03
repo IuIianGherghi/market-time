@@ -65,10 +65,18 @@ export default async function Home() {
 function ProductCard({ product }: { product: Product }) {
   const affiliateLink = `${product.affiliate_code}${encodeURIComponent(product.product_url)}`;
 
+  // Generate slug from category name
+  const categorySlug = product.category_ids[0]
+    ? product.category_ids[0].toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-').replace(/[^a-z0-9-]/g, '')
+    : 'produse';
+
+  // Generate product slug from title + ID
+  const productSlug = `${product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${product.id}`;
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow overflow-hidden">
       {/* Product Image - Clickable */}
-      <Link href={`/p/${product.category_ids[0]}/${product.slug}`}>
+      <Link href={`/p/${categorySlug}/${productSlug}`}>
         <div className="relative h-64 bg-gray-100 cursor-pointer group">
           <Image
             src={product.image_url}
@@ -87,7 +95,7 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Product Info */}
       <div className="p-4">
-        <Link href={`/p/${product.category_ids[0]}/${product.slug}`}>
+        <Link href={`/p/${categorySlug}/${productSlug}`}>
           <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 h-10 hover:text-blue-600 cursor-pointer">
             {product.title}
           </h3>
@@ -128,7 +136,7 @@ function ProductCard({ product }: { product: Product }) {
 
           {/* View Details Button - Internal Link */}
           <Link
-            href={`/p/${product.category_ids[0]}/${product.slug}`}
+            href={`/p/${categorySlug}/${productSlug}`}
             className="w-full block bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded-md transition-colors text-center"
           >
             Vezi Detalii

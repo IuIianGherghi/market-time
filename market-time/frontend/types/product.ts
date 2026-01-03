@@ -6,7 +6,7 @@
 
 export interface Product {
   id: number;
-  slug: string;
+  slug?: string;
   sku: string;
   title: string;
   price: number;

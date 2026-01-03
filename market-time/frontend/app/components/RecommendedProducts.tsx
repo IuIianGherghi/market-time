@@ -70,10 +70,18 @@ function ProductCard({ product, categorySlug }: { product: Product; categorySlug
     trackAffiliateClick(product, categorySlug);
   };
 
+  // Generate category slug from category name
+  const catSlug = product.category_ids[0]
+    ? product.category_ids[0].toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-').replace(/[^a-z0-9-]/g, '')
+    : 'produse';
+
+  // Generate product slug from title + ID
+  const productSlug = `${product.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${product.id}`;
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow overflow-hidden">
       {/* Product Image - Clickable */}
-      <Link href={`/p/${product.category_ids[0]}/${product.slug}`}>
+      <Link href={`/p/${catSlug}/${productSlug}`}>
         <div className="relative h-32 bg-gray-100 cursor-pointer group">
           <Image
             src={product.image_url}
@@ -92,7 +100,7 @@ function ProductCard({ product, categorySlug }: { product: Product; categorySlug
 
       {/* Product Info */}
       <div className="p-3">
-        <Link href={`/p/${product.category_ids[0]}/${product.slug}`}>
+        <Link href={`/p/${catSlug}/${productSlug}`}>
           <h3 className="text-xs font-medium text-gray-900 line-clamp-2 mb-2 h-8 hover:text-blue-600 cursor-pointer">
             {product.title}
           </h3>
@@ -119,7 +127,7 @@ function ProductCard({ product, categorySlug }: { product: Product; categorySlug
         <div className="space-y-1">
           {/* View Details Button */}
           <Link
-            href={`/p/${product.category_ids[0]}/${product.slug}`}
+            href={`/p/${catSlug}/${productSlug}`}
             className="w-full block bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1.5 px-2 rounded transition-colors text-center"
           >
             Vezi Detalii
