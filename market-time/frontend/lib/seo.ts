@@ -105,7 +105,7 @@ export function getProductMetadata(product: Product, categorySlug: string): Meta
   return {
     title: product.title,
     description,
-    canonical: `${SITE_URL}/p/${categorySlug}/${product.id}`,
+    canonical: `${SITE_URL}/p/${categorySlug}/${product.slug}`,
     ogImage: product.image_url,
     ogType: 'product',
     keywords: `${product.title}, ${product.brand || ''}, pret ${product.title}, ${product.merchant.name}`.trim(),
@@ -142,7 +142,7 @@ export function generateProductSchema(product: Product, categorySlug: string) {
     } : undefined,
     offers: {
       '@type': 'Offer',
-      url: `${SITE_URL}/p/${categorySlug}/${product.id}`,
+      url: `${SITE_URL}/p/${categorySlug}/${product.slug}`,
       priceCurrency: 'RON',
       price: product.price.toFixed(2),
       priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days
@@ -184,7 +184,7 @@ export function generateProductListSchema(products: Product[], categorySlug?: st
     itemListElement: products.map((product, index) => ({
       '@type': 'ListItem',
       position: index + 1,
-      url: `${SITE_URL}/p/${categorySlug || product.category_ids[0]}/${product.id}`,
+      url: `${SITE_URL}/p/${categorySlug || product.category_ids[0]}/${product.slug}`,
       name: product.title,
     })),
   };
