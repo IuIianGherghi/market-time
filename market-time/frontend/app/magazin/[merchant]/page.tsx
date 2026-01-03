@@ -52,16 +52,19 @@ export async function generateMetadata({ params }: MerchantPageProps): Promise<M
 }
 
 export default async function MerchantPage({ params }: MerchantPageProps) {
-  // Fetch merchant data and initial products on server side for SEO
-  const [merchant, response] = await Promise.all([
-    getMerchantBySlug(params.merchant),
-    getProductsByMerchant(params.merchant, {
-      page: 1,
-      per_page: 20,
-      orderby: 'date',
-      order: 'desc',
-    }),
-  ]);
+  // Fetch merchant data first to get the merchant ID
+  const merchant = await getMerchantBySlug(params.merchant);
+
+  // Get merchant ID from SEO data (stored as merchant_id in database)
+  const merchantId = merchant.seo?.merchant_id || merchant.id;
+
+  // Fetch products using merchant ID
+  const response = await getProductsByMerchant(merchantId, {
+    page: 1,
+    per_page: 20,
+    orderby: 'date',
+    order: 'desc',
+  });
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://market-time.ro';
   const productListSchema = response.data.length > 0 ? generateProductListSchema(response.data, params.merchant) : null;
@@ -93,6 +96,7 @@ export default async function MerchantPage({ params }: MerchantPageProps) {
         initialTotalCount={response.pagination.total_count}
         initialTotalPages={response.pagination.total_pages}
         merchant={params.merchant}
+        merchantId={merchantId}
         merchantName={merchant.name}
         merchantDescription={merchant.seo?.description || merchant.description}
         merchantSeoContent={merchant.seo?.seo_content}

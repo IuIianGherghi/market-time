@@ -103,7 +103,7 @@ export interface ProductsQueryParams {
   per_page?: number;
   category?: string;
   brand?: string;
-  merchant?: string;
+  merchant_id?: string; // Merchant ID or comma-separated list of merchant IDs
   min_price?: number;
   max_price?: number;
   min_discount?: number;

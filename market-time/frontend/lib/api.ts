@@ -229,15 +229,15 @@ export async function getProductsByBrand(
 }
 
 /**
- * Get products by merchant slug
+ * Get products by merchant ID
  */
 export async function getProductsByMerchant(
-  merchantSlug: string,
-  params: Omit<ProductsQueryParams, 'merchant'> = {}
+  merchantId: string | number,
+  params: Omit<ProductsQueryParams, 'merchant_id'> = {}
 ): Promise<ProductsResponse> {
   return getProducts({
     ...params,
-    merchant: merchantSlug,
+    merchant_id: String(merchantId),
   });
 }
 

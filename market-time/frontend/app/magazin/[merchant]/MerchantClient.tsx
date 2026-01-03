@@ -12,6 +12,7 @@ interface MerchantClientProps {
   initialTotalCount: number;
   initialTotalPages: number;
   merchant: string;
+  merchantId: string | number;
   merchantName: string;
   merchantDescription?: string;
   merchantSeoContent?: string;
@@ -22,6 +23,7 @@ export default function MerchantClient({
   initialTotalCount,
   initialTotalPages,
   merchant,
+  merchantId,
   merchantName,
   merchantDescription,
   merchantSeoContent,
@@ -83,7 +85,7 @@ export default function MerchantClient({
       // Parse sort parameter
       const [orderby, order] = sort.split('-') as ['date' | 'price' | 'discount' | 'title', 'asc' | 'desc'];
 
-      const response = await getProductsByMerchant(merchant, {
+      const response = await getProductsByMerchant(merchantId, {
         page,
         per_page: perPage,
         min_price: minPrice,

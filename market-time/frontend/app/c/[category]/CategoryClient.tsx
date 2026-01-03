@@ -96,7 +96,7 @@ export default function CategoryClient({
         min_price: minPrice,
         max_price: maxPrice,
         brand: selectedBrands.length > 0 ? selectedBrands.join(',') : undefined,
-        merchant: selectedMerchants.length > 0 ? selectedMerchants.join(',') : undefined,
+        merchant_id: selectedMerchants.length > 0 ? selectedMerchants.join(',') : undefined,
         orderby,
         order,
       });

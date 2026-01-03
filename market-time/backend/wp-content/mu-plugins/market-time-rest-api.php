@@ -44,7 +44,8 @@ function market_time_register_rest_routes() {
                 },
             ),
             'merchant_id' => array(
-                'sanitize_callback' => 'absint',
+                'sanitize_callback' => 'sanitize_text_field',
+                'description' => 'Merchant ID or comma-separated list of merchant IDs',
             ),
             'brand' => array(
                 'sanitize_callback' => 'sanitize_text_field',
@@ -161,10 +162,17 @@ function market_time_get_products($request) {
         }
     }
 
-    // Filter by merchant
+    // Filter by merchant (supports multiple IDs separated by comma)
     if ($merchant_id) {
-        $where[] = "merchant_id = %d";
-        $where_values[] = $merchant_id;
+        // Split comma-separated merchant IDs
+        $merchant_ids = array_map('intval', explode(',', $merchant_id));
+        $merchant_ids = array_filter($merchant_ids); // Remove empty values
+
+        if (!empty($merchant_ids)) {
+            $placeholders = implode(',', array_fill(0, count($merchant_ids), '%d'));
+            $where[] = "merchant_id IN ($placeholders)";
+            $where_values = array_merge($where_values, $merchant_ids);
+        }
     }
 
     // Filter by brand
